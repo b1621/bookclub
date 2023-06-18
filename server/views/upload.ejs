@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Upload image</h1>
+
+    <form method="post" action="/upload" enctype="multipart/form-data">
+      <input type="file" name="image" />
+      <button type="submit">Submit</button>
+    </form>
+    <div>
+      <p>hello</p>
+    </div>
+    <!-- <img src="../public/images/1687077873305.png" alt="" /> -->
+    <div id="image-container">
+      <% data.forEach((image) => { %>
+      <div>
+        <p><%= image.id %></p>
+        <p><%= image.path %></p>
+      </div>
+      <%if (image.path) {%>
+      <div>
+        <img src="<%= image.path %>" alt="<%= image.originalname %>" />
+      </div>
+      <%}%> <% }); %>
+    </div>
+  </body>
+</html>
