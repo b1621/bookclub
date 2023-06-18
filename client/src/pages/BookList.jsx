@@ -7,8 +7,10 @@ const BookList = () => {
     const fetchBooks = async () => {
       try {
         const response = await fetch("http://localhost:3001/api/books");
+        // console.log(response);
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           setBooks(data);
         } else {
           console.error("Error:", response.status);
@@ -33,7 +35,10 @@ const BookList = () => {
           <p>Genre: {book.genre}</p>
           <p>Synopsis: {book.synopsis}</p>
           {book.image && (
-            <img src={book.image.path} alt={book.image.originalName} />
+            <div>
+              <img src={book.image.path} alt={book.image.originalName} />
+              <p>{book.image.path}</p>
+            </div>
           )}
         </div>
       ))}
