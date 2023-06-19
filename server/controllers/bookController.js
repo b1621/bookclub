@@ -124,3 +124,68 @@ exports.deleteBook = async (req, res) => {
     });
   }
 };
+
+exports.updateBook = [
+  upload.single("image"),
+  async (req, res) => {
+    const { id } = req.params;
+    const { title, author, genre, synopsis } = req.body;
+    try {
+      // Find the book by ID using PrismaClient
+      const existingBook = await prisma.book.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+      if (!existingBook) {
+        res.status(404).json({ error: "Book not found" });
+        return;
+      }
+
+      // Update book details
+      const updatedBook = await prisma.book.update({
+        where: { id: parseInt(id) },
+        data: {
+          title,
+          author,
+          genre,
+          synopsis,
+        },
+      });
+
+      // Update the image if a new file is provided
+      if (req.file) {
+        console.log(req.file);
+        const { originalname, filename } = req.file;
+        const imagePath = `/images/${filename}`;
+
+        console.log("----------");
+        console.log(originalname);
+        console.log(filename);
+        console.log(imagePath);
+
+        // Create or update the image record associated with the book
+        await prisma.image.upsert({
+          where: { bookId: parseInt(id) },
+          create: {
+            originalName: originalname,
+            fileName: filename,
+            path: imagePath,
+            book: { connect: { id: parseInt(id) } },
+          },
+          update: {
+            originalName: originalname,
+            fileName: filename,
+            path: imagePath,
+          },
+        });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Book updated successfully", book: updatedBook });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  },
+];
