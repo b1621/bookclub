@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
+const fs = require("fs");
 const path = require("path");
 
 const multer = require("multer");
@@ -8,12 +8,12 @@ const multer = require("multer");
 // Set up Multer storage for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images");
+    cb(null, path.join(__dirname, "../public/images"));
     // Specify the directory where the images will be stored
   },
   filename: (req, file, cb) => {
     console.log(file);
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + "-" + path.extname(file.originalname));
   },
 });
 
@@ -43,8 +43,13 @@ exports.getBook = async (req, res) => {
   try {
     const { id } = req.params;
     const book = await prisma.book.findUnique({
-      where: id,
-      include: image,
+      where: {
+        id: parseInt(id),
+      },
+
+      include: {
+        image: true,
+      },
     });
     res.status(200).json({
       status: "success",
@@ -99,3 +104,23 @@ exports.createBook = [
     }
   },
 ];
+
+exports.deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await prisma.book.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    res.status(200).json({
+      status: "success",
+      message: "Book deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
