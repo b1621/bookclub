@@ -40,44 +40,64 @@ const AddBook = () => {
     }
   };
 
+  const contStyle = "flex flex-row justify-between mx-20 my-5";
+  const labelStyle = "text-xl";
+  const inputStyle = "border outline-none rounded-md px-2 py-1 w-1/2";
   return (
-    <form onSubmit={handleSubmit} className=" border bg-slate-50">
-      <div>
-        <label>Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+    <form
+      onSubmit={handleSubmit}
+      className=' border bg-slate-50 w-[700px] mx-auto my-14'
+    >
+      <p className='text-center text-3xl my-2'>Add Book</p>
+      <div className='my-16'>
+        <div className={contStyle}>
+          <label className={labelStyle}>Title</label>
+          <input
+            className={inputStyle}
+            type='text'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className={contStyle}>
+          <label className={labelStyle}>Author</label>
+          <input
+            className={inputStyle}
+            type='text'
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <div className={contStyle}>
+          <label className={labelStyle}>Genre</label>
+          <input
+            type='text'
+            className={inputStyle}
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+          />
+        </div>
+        <div className={contStyle}>
+          <label className={labelStyle}>Synopsis</label>
+          <textarea
+            className={inputStyle}
+            value={synopsis}
+            onChange={(e) => setSynopsis(e.target.value)}
+          />
+        </div>
+        <div className={contStyle}>
+          <label className={labelStyle}>Image</label>
+          <input type='file' accept='image/*' onChange={handleFileChange} />
+        </div>
+        <div className=''>
+          <button
+            className='border border-green-900 text-green-900 px-7 mx-[40%] my-10'
+            type='submit'
+          >
+            Upload
+          </button>
+        </div>
       </div>
-      <div>
-        <label>Author</label>
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Genre</label>
-        <input
-          type="text"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Synopsis</label>
-        <textarea
-          value={synopsis}
-          onChange={(e) => setSynopsis(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Image</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-      </div>
-      <button type="submit">Upload</button>
     </form>
   );
 };

@@ -21,20 +21,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
+    exposedHeaders: ["Server-Host", "Server-Protocol"], // Add the Server-Host header to the list of exposed headers
   })
 );
 
-app.get("/upload", async (req, res) => {
-  const data = await prisma.images.findMany();
-  console.log(data);
-  res.render("upload", { data: data });
-});
-
-app.get("/", async (req, res) => {
-  const data = await prisma.images.findMany();
-  console.log(data);
-  res.send("image lsits");
-});
+// Custom middleware to set the Server-Host and Server-Protocol headers
+const setServerHeaders = (req, res, next) => {
+  res.setHeader("Server-Host", req.headers.host);
+  res.setHeader("Server-Protocol", req.protocol);
+  next();
+};
+app.use(setServerHeaders); // Use the custom middleware to set the Server-Host and Server-Protocol headers
 
 app.use("/api/books", bookRoute);
 app.use("/test", testroute);

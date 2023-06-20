@@ -20,18 +20,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 exports.getAllBooks = async (req, res) => {
-  // const data = await prisma.book.findMany({
-  //   include: image,
-  // });
-  // console.log(data);
-  // res.send("image lsits");
   try {
     const books = await prisma.book.findMany({
       include: {
         image: true,
       },
     });
-    console.log(books);
+    // console.log(books);
     res.status(200).json(books);
   } catch (error) {
     console.error("Error:", error);
@@ -164,13 +159,14 @@ exports.updateBook = [
         console.log(imagePath);
 
         // Create or update the image record associated with the book
-        await prisma.image.upsert({
-          where: { bookId: parseInt(id) },
+
+        await prisma.images.upsert({
+          where: { id: parseInt(id) },
           create: {
             originalName: originalname,
             fileName: filename,
             path: imagePath,
-            book: { connect: { id: parseInt(id) } },
+            Book: { connect: { id: parseInt(id) } },
           },
           update: {
             originalName: originalname,

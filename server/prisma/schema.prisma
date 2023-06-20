@@ -32,5 +32,6 @@ model Images {
 
   // bookId       Int?
   // Book Int
+  // Book Book[]
   Book Book[]
 }
